@@ -9,8 +9,6 @@ namespace HabitApp.Core
 
         public EntityFactory<T> Factory { get; } = new();
 
-        private string _tableName = (string)(typeof(T).GetProperty("TableName")?.GetValue(null) ?? "");
-
         public void Delete(T entity)
         {
             throw new NotImplementedException();
@@ -20,7 +18,9 @@ namespace HabitApp.Core
         {
             using (SqliteConnection conn = new(ConnectionString))
             {
-                string query = $"SELECT * FROM {_tableName} WHERE id = @Id;";
+                T entity = CreateInstance();
+
+                string query = $"SELECT * FROM {entity.TableName} WHERE id = @Id;";
 
                 SqliteCommand command = new(query, conn);
                 command.Parameters.AddWithValue("@Id", id);
@@ -28,21 +28,20 @@ namespace HabitApp.Core
                 conn.Open();
                 SqliteDataReader reader = command.ExecuteReader();
 
-                if (!reader.HasRows) return null;
-
                 reader.Read();
 
-                T habit = Factory.Create(reader);
+                entity.MakeFrom(reader);
 
                 reader.Close();
-                return habit;
+
+                return entity;
             }
         }
         public IEnumerable<T> GetAll()
         {
             using (SqliteConnection conn = new(ConnectionString))
             {
-                string query = $"SELECT * FROM {_tableName};";
+                string query = $"SELECT * FROM {CreateInstance().TableName};";
 
                 SqliteCommand command = new(query, conn);
 
@@ -54,7 +53,9 @@ namespace HabitApp.Core
                 {
                     while (reader.Read())
                     {
-                        yield return Factory.Create(reader);
+                        T entity = CreateInstance();
+                        entity.MakeFrom(reader);
+                        yield return entity;
                     }
                 }
             }
@@ -70,6 +71,11 @@ namespace HabitApp.Core
         public T Update(T entity)
         {
             throw new NotImplementedException();
+        }
+
+        protected T CreateInstance()
+        {
+            return (T)Activator.CreateInstance(typeof(T))!;
         }
     }
 }

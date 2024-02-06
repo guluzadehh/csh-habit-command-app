@@ -5,7 +5,7 @@ namespace HabitApp.Core
 {
     public abstract class BaseEntity : IEntity
     {
-        public static string TableName { get; } = "";
+        public abstract string TableName { get; }
 
         public EntityField<int> Id { get; set; } = new("id");
 
