@@ -7,8 +7,6 @@ namespace HabitApp.Core
     {
         public string ConnectionString { get; } = connectionString;
 
-        public EntityFactory<T> Factory { get; } = new();
-
         public void Delete(T entity)
         {
             throw new NotImplementedException();
