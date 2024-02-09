@@ -18,5 +18,10 @@ public static class Program
     {
         commands.Register(new HabitListCommand());
         commands.Register(new HabitDetailCommand());
+        commands.Register(new HabitCreateCommand());
+        commands.Register(new HabitDeleteCommand());
+        commands.Register(new LogListCommand());
+        commands.Register(new LogCreateCommand());
+        commands.Register(new LogDeleteCommand());
     }
 }
