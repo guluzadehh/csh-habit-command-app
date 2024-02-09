@@ -1,5 +1,4 @@
 using CommandApp.Feature;
-using HabitApp.Core;
 
 namespace HabitApp
 {
@@ -7,11 +6,9 @@ namespace HabitApp
     {
         public override void Run()
         {
-            BaseRepository<HabitEntity> repository = new(Helpers.GetConnectionString("HabitDB"));
+            HabitServices services = new(App);
+            HabitEntity? habit = services.HabitSelect();
 
-            int id = HabitServices.HabitSelectId(App, repository);
-
-            HabitEntity? habit = repository.Get(id);
             if (habit != null)
             {
                 SendResponse($"{habit.Id}. {habit.Name}\t{habit.Description}\n-> {habit.UnitName}\n");

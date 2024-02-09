@@ -1,22 +1,14 @@
-using CommandApp.App;
 using CommandApp.Command;
-using HabitApp.Core;
+using CommandApp.Feature;
 
 namespace HabitApp
 {
-    public class HabitListCommand : ICommand
+    public class HabitListCommand : BaseCommand
     {
-        public string Value { get; } = "1";
+        public override string Value { get; } = "1";
 
-        public string Description { get; } = "List habits";
+        public override string Description { get; } = "List habits";
 
-        public void Execute(IApp app)
-        {
-            BaseRepository<HabitEntity> repository = new(Helpers.GetConnectionString("HabitDB"));
-
-            HabitServices.HabitListDisplay(app, repository);
-
-            app.Output.Wait();
-        }
+        public override IFeature Feature { get; } = new HabitListFeature();
     }
 }
