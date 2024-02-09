@@ -9,6 +9,6 @@ namespace HabitApp.Core
 
         T Insert(T entity);
         T Update(T entity);
-        void Delete(T entity);
+        bool Delete(T entity);
     }
 }

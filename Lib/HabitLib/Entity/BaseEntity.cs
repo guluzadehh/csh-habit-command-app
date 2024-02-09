@@ -1,4 +1,5 @@
 using System.Data.Common;
+using System.Linq;
 using System.Reflection;
 
 namespace HabitApp.Core
@@ -11,17 +12,21 @@ namespace HabitApp.Core
 
         public void MakeFrom(DbDataReader reader)
         {
+            foreach (PropertyInfo prop in Fields())
+            {
+                object fieldInstance = prop.GetValue(this);
+                prop.PropertyType.GetMethod("SetFrom").Invoke(fieldInstance, [reader]);
+            }
+        }
+
+        public IEnumerable<PropertyInfo> Fields()
+        {
             Type target = typeof(EntityField<>);
 
-            foreach (PropertyInfo prop in GetType().GetProperties())
+            return GetType().GetProperties().Where((PropertyInfo prop) =>
             {
-                if (prop.PropertyType.IsGenericType
-                    && prop.PropertyType.GetGenericTypeDefinition() == target)
-                {
-                    object fieldInstance = prop.GetValue(this);
-                    prop.PropertyType.GetMethod("SetFrom").Invoke(fieldInstance, [reader]);
-                }
-            }
+                return prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == target;
+            });
         }
     }
 }
