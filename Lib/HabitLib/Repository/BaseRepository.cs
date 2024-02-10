@@ -135,14 +135,54 @@ namespace HabitApp.Core
 
                 return entity;
             }
-
-
-            throw new Exception();
         }
 
         public T Update(T entity)
         {
-            throw new NotImplementedException();
+            Dictionary<string, string> values = [];
+
+            string query = $"UPDATE {entity.TableName} SET ";
+            string parameters = "";
+
+            foreach (PropertyInfo prop in entity.Fields())
+            {
+                if (prop.Name == "Id") continue;
+
+                object fieldInstance = prop.GetValue(entity);
+
+                PropertyInfo valueProp = prop.PropertyType.GetProperty("Value")!;
+                PropertyInfo columnProp = prop.PropertyType.GetProperty("ColumnName");
+
+                object value = valueProp.GetValue(fieldInstance).ToString();
+                object column = (string)columnProp.GetValue(fieldInstance);
+
+                string parameter = "@" + column.ToString();
+                parameters += column.ToString() + "=" + parameter + ",";
+
+                values[parameter] = value.ToString();
+            }
+
+            parameters = parameters.Remove(parameters.Length - 1);
+
+            query += parameters + " WHERE id=@id;";
+
+            using (SqliteConnection conn = new(ConnectionString))
+            {
+                SqliteCommand command = new(query, conn);
+
+                command.Parameters.AddWithValue("@id", entity.Id.Value);
+
+                foreach (KeyValuePair<string, string> kv in values)
+                {
+                    command.Parameters.AddWithValue(kv.Key, kv.Value);
+                }
+
+                conn.Open();
+
+                command.ExecuteNonQuery();
+
+                return entity;
+            }
         }
 
         protected T CreateInstance()
