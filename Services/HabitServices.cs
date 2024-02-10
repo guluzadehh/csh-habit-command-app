@@ -1,6 +1,7 @@
 using CommandApp.App;
 using CommandApp.Exceptions;
 using HabitApp.Core;
+using Microsoft.Data.Sqlite;
 
 namespace HabitApp
 {
@@ -49,7 +50,7 @@ namespace HabitApp
             {
                 return Repository.Insert(habit);
             }
-            catch (Exception exc)
+            catch (SqliteException exc)
             {
                 throw new BaseException("Database Error while creating the habit", exc);
             }
@@ -61,9 +62,43 @@ namespace HabitApp
             {
                 Repository.Delete(habit);
             }
-            catch (Exception exc)
+            catch (SqliteException exc)
             {
                 throw new BaseException("Database Error while deleting the habit", exc);
+            }
+        }
+
+        public HabitEntity Update()
+        {
+            HabitEntity habit = HabitSelect();
+
+            try
+            {
+                habit.Name.Value = App.Input.Get("Enter name (q! for default)");
+            }
+            catch (QuitInputRead) { }
+
+
+            try
+            {
+                habit.Description.Value = App.Input.Get("Enter description (q! for default)");
+            }
+            catch (QuitInputRead) { }
+
+
+            try
+            {
+                habit.UnitName.Value = App.Input.Get("Enter unit name (q! for default)");
+            }
+            catch (QuitInputRead) { }
+
+            try
+            {
+                return Repository.Update(habit);
+            }
+            catch (SqliteException exc)
+            {
+                throw new BaseException("Database Error while updating the habit", exc);
             }
         }
     }

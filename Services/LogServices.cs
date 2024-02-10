@@ -1,6 +1,7 @@
 using CommandApp.App;
 using CommandApp.Exceptions;
 using HabitApp.Core;
+using Microsoft.Data.Sqlite;
 
 namespace HabitApp
 {
@@ -46,7 +47,7 @@ namespace HabitApp
             {
                 return Repository.Insert(log);
             }
-            catch (Exception exc)
+            catch (SqliteException exc)
             {
                 throw new BaseException("Database Error while creating the log", exc);
             }
@@ -58,9 +59,27 @@ namespace HabitApp
             {
                 Repository.Delete(log);
             }
-            catch (Exception exc)
+            catch (SqliteException exc)
             {
                 throw new BaseException("Database Error while deleting the log", exc);
+            }
+        }
+
+        public LogEntity Update(LogEntity log)
+        {
+            try
+            {
+                log.Value.Value = Helpers.GetIntInput(App.Input, "Enter value (q! for default)");
+            }
+            catch (QuitInputRead) { }
+
+            try
+            {
+                return Repository.Update(log);
+            }
+            catch (SqliteException exc)
+            {
+                throw new BaseException("Database Error while updating the log", exc);
             }
         }
 
