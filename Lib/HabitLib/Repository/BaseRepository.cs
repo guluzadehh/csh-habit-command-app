@@ -8,7 +8,7 @@ namespace HabitApp.Core
     {
         public string ConnectionString { get; } = connectionString;
 
-        public bool Delete(T entity)
+        public void Delete(T entity)
         {
             string query = $"DELETE FROM {entity.TableName} WHERE id = @Id";
 
@@ -18,18 +18,18 @@ namespace HabitApp.Core
                 command.Parameters.AddWithValue("@Id", entity.Id.Value);
 
                 conn.Open();
-                return command.ExecuteNonQuery() == 1;
+                command.ExecuteNonQuery();
             }
         }
 
         public T? Get(int id)
         {
+            T entity = CreateInstance();
+
+            string query = $"SELECT * FROM {entity.TableName} WHERE id = @Id;";
+
             using (SqliteConnection conn = new(ConnectionString))
             {
-                T entity = CreateInstance();
-
-                string query = $"SELECT * FROM {entity.TableName} WHERE id = @Id;";
-
                 SqliteCommand command = new(query, conn);
                 command.Parameters.AddWithValue("@Id", id);
 
@@ -56,10 +56,10 @@ namespace HabitApp.Core
         }
         public IEnumerable<T> GetAll()
         {
+            string query = $"SELECT * FROM {CreateInstance().TableName};";
+
             using (SqliteConnection conn = new(ConnectionString))
             {
-                string query = $"SELECT * FROM {CreateInstance().TableName};";
-
                 SqliteCommand command = new(query, conn);
 
                 conn.Open();
