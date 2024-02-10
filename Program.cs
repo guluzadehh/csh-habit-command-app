@@ -25,5 +25,6 @@ public static class Program
         commands.Register(new LogCreateCommand());
         commands.Register(new LogDeleteCommand());
         commands.Register(new LogUpdateCommand());
+        commands.Register(new HabitReportCommand());
     }
 }
