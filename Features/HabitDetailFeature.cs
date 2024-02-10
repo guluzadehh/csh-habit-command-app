@@ -7,16 +7,8 @@ namespace HabitApp
         public override void Run()
         {
             HabitServices services = new(App);
-            HabitEntity? habit = services.HabitSelect();
-
-            if (habit != null)
-            {
-                SendResponse($"{habit.Id}. {habit.Name}\t{habit.Description}\n-> {habit.UnitName}\n");
-            }
-            else
-            {
-                SendResponse("Doesn't exist\n");
-            }
+            HabitEntity habit = services.HabitSelect();
+            SendResponse($"{habit.Id}. {habit.Name} - {habit.Description}\n-> {habit.UnitName}\n");
         }
     }
 }

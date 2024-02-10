@@ -7,18 +7,12 @@ namespace HabitApp
         public override void Run()
         {
             HabitServices habitServices = new(App);
-            HabitEntity? habit = habitServices.HabitSelect();
+            HabitEntity habit = habitServices.HabitSelect();
 
-            if (habit == null)
-            {
-                App.Output.WriteAndWait("Habit doesn't exist");
-                return;
-            }
-
-            App.Output.Write($"{habit.Name}\n{habit.Description}\n\nLogs:\n");
+            App.Output.Write($"{habit.Name} - {habit.Description}\n\nLogs:\n");
 
             LogServices logServices = new(App);
-            logServices.LogListDisplay(habit);
+            logServices.LogListDisplay(logServices.GetAll(habit), habit);
 
             App.Output.Write("\n");
             App.Output.Wait();

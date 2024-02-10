@@ -8,7 +8,7 @@ namespace HabitApp
         {
             HabitServices services = new(App);
             HabitEntity habit = services.Create();
-            App.Output.WriteAndWait($"Habit#{habit.Id} ({habit.Name}) was created successfully!");
+            SendResponse($"Habit [{habit.Id}] ({habit.Name}) was created successfully!");
         }
     }
 }

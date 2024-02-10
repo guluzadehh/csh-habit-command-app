@@ -9,18 +9,11 @@ namespace HabitApp
             HabitServices habitServices = new(App);
             HabitEntity habit = habitServices.HabitSelect();
 
-            if (habit == null)
-            {
-                App.Output.WriteAndWait("Habit doesn't exist");
-                return;
-            }
-
             LogServices logServices = new(App);
+            LogEntity log = logServices.LogSelect(habit);
+            logServices.Delete(log);
 
-            if (logServices.Delete(habit))
-            {
-                App.Output.WriteAndWait("Log was deleted successfully!");
-            }
+            SendResponse($"Log [{log.Id}] was deleted successfully!");
         }
     }
 }

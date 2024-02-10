@@ -7,8 +7,7 @@ namespace HabitApp
         public override void Run()
         {
             HabitServices services = new(App);
-            services.HabitListDisplay();
-
+            services.HabitListDisplay(services.Repository.GetAll());
             App.Output.Wait();
         }
     }

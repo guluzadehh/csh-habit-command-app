@@ -7,18 +7,11 @@ namespace HabitApp
         public override void Run()
         {
             HabitServices services = new(App);
+
             HabitEntity habit = services.HabitSelect();
+            services.Delete(habit);
 
-            if (habit == null)
-            {
-                App.Output.WriteAndWait("Habit doesn't exist.");
-                return;
-            }
-
-            if (services.Delete(habit))
-            {
-                App.Output.WriteAndWait($"{habit.Name} was deleted successfully!");
-            }
+            SendResponse($"Habit ({habit.Name}) was deleted successfully!");
         }
     }
 }
