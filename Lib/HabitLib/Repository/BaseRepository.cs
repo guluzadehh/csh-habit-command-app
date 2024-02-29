@@ -14,7 +14,7 @@ namespace HabitApp.Core
 
             using (SqliteConnection conn = new(ConnectionString))
             {
-                SqliteCommand command = new(query, conn);
+                using SqliteCommand command = new(query, conn);
                 command.Parameters.AddWithValue("@Id", entity.Id.Value);
 
                 conn.Open();
@@ -30,7 +30,7 @@ namespace HabitApp.Core
 
             using (SqliteConnection conn = new(ConnectionString))
             {
-                SqliteCommand command = new(query, conn);
+                using SqliteCommand command = new(query, conn);
                 command.Parameters.AddWithValue("@Id", id);
 
                 conn.Open();
@@ -60,7 +60,7 @@ namespace HabitApp.Core
 
             using (SqliteConnection conn = new(ConnectionString))
             {
-                SqliteCommand command = new(query, conn);
+                using SqliteCommand command = new(query, conn);
 
                 conn.Open();
 
@@ -120,7 +120,7 @@ namespace HabitApp.Core
 
             using (SqliteConnection conn = new(ConnectionString))
             {
-                SqliteCommand command = new(query, conn);
+                using SqliteCommand command = new(query, conn);
 
                 foreach (KeyValuePair<string, string> kv in values)
                 {
@@ -168,7 +168,7 @@ namespace HabitApp.Core
 
             using (SqliteConnection conn = new(ConnectionString))
             {
-                SqliteCommand command = new(query, conn);
+                using SqliteCommand command = new(query, conn);
 
                 command.Parameters.AddWithValue("@id", entity.Id.Value);
 
